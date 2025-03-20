@@ -1,5 +1,8 @@
 ## EX. NO:2 IMPLEMENTATION OF PLAYFAIR CIPHER
 
+## Name: Vignesh M
+## Reg: 212223240176
+
  
 
 ## AIM:
@@ -34,10 +37,59 @@ STEP-5: Display the obtained cipher text.
 
 
 
-Program:
+## Program:
+~~~
+def generate_matrix(key):
+    key = "".join(dict.fromkeys(key.upper().replace("J", "I") + "ABCDEFGHIKLMNOPQRSTUVWXYZ"))
+    return [list(key[i:i+5]) for i in range(0, 25, 5)]
+
+def find_pos(matrix, char):
+    for r, row in enumerate(matrix):
+        if char in row:
+            return r, row.index(char)
+
+def playfair(text, key, encrypt=True):
+    text = text.upper().replace("J", "I").replace(" ", "")
+    if len(text) % 2:
+        text += "X"
+    
+    matrix = generate_matrix(key)
+    result = ""
+    
+    for i in range(0, len(text), 2):
+        a, b = text[i], text[i+1]
+        r1, c1 = find_pos(matrix, a)
+        r2, c2 = find_pos(matrix, b)
+        
+        if r1 == r2:
+            c1, c2 = (c1+1, c2+1) if encrypt else (c1-1, c2-1)
+        elif c1 == c2:
+            r1, r2 = (r1+1, r2+1) if encrypt else (r1-1, r2-1)
+        else:
+            c1, c2 = c2, c1
+        
+        result += matrix[r1 % 5][c1 % 5] + matrix[r2 % 5][c2 % 5]
+    
+    return result
+
+message = input("Enter the message : ")
+key = input("Enter the keyword : ")
+
+encrypted = playfair(message, key)
+print("Encrypted:", encrypted)
+decrypted = playfair(encrypted, key, encrypt=False)
+print("Decrypted:", decrypted)
+
+~~~
 
 
 
 
 
-Output:
+## Output:
+![image](https://github.com/user-attachments/assets/75f656b2-e473-431c-985e-af17d57f8dcd)
+
+## Result:
+
+Thus the program is executed succesfully.
+
